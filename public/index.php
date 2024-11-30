@@ -47,18 +47,12 @@ $app->get('/api/products', function (Request $request, Response $response) {
 
 $app->get('/api/products/{id:[0-9]+}', function (Request $request, Response $response, string $id) {
 
-    $repository = $this->get(App\Repositories\ProductRepository::class);
-
-    $data = $repository->getProductById((int)$id);
-
-    if ($data === false) {
-        throw new \Slim\Exception\HttpNotFoundException($request);
-    }
+    $data = $request->getAttribute('product');
 
     $response->getBody()->write(json_encode($data));
 
     return $response;
-});
+})->add(App\Middleware\GetProduct::class);
 
 
 $app->run();
