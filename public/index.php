@@ -8,6 +8,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use DI\ContainerBuilder;
 use Slim\Handlers\Strategies\RequestResponseArgs;
+use App\Controllers\ProductIndex;
+use App\Controllers\Products;
 
 
 
@@ -35,24 +37,9 @@ $error_handler->forceContentType('application/json');
 
 $app->add(new AddJsonResponseHeader);
 
-$app->get('/api/products', function (Request $request, Response $response) {
+$app->get('/api/products', ProductIndex::class);
 
-    $repository = $this->get(App\Repositories\ProductRepository::class);
-
-    $data = $repository->getAll();
-
-    $response->getBody()->write(json_encode($data));
-    return $response;
-});
-
-$app->get('/api/products/{id:[0-9]+}', function (Request $request, Response $response, string $id) {
-
-    $data = $request->getAttribute('product');
-
-    $response->getBody()->write(json_encode($data));
-
-    return $response;
-})->add(App\Middleware\GetProduct::class);
+$app->get('/api/products/{id:[0-9]+}', Products::class . ':show')->add(App\Middleware\GetProduct::class);
 
 
 $app->run();
