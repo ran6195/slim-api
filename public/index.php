@@ -30,6 +30,8 @@ $app = AppFactory::create();
 $collector = $app->getRouteCollector();
 $collector->setDefaultInvocationStrategy(new RequestResponseArgs());
 
+$app->addBodyParsingMiddleware();
+
 $error_middleware = $app->addErrorMiddleware(true, true, true);
 
 $error_handler = $error_middleware->getDefaultErrorHandler();
@@ -40,6 +42,8 @@ $app->add(new AddJsonResponseHeader);
 $app->get('/api/products', ProductIndex::class);
 
 $app->get('/api/products/{id:[0-9]+}', Products::class . ':show')->add(App\Middleware\GetProduct::class);
+
+$app->post('/api/products', [Products::class, 'create']);
 
 
 $app->run();

@@ -22,4 +22,20 @@ class Products
 
         return $response;
     }
+
+    public function create(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+
+        $data = $this->repository->create($data);
+
+        $body = [
+            "message" => "Product created",
+            "id" => $data
+        ];
+
+        $response->getBody()->write(json_encode($body));
+
+        return $response->withStatus(201);
+    }
 }

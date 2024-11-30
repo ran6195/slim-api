@@ -32,4 +32,27 @@ class ProductRepository
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function create(array $data): string
+    {
+
+        $pdo = $this->database->getConnection();
+
+        $sql = "INSERT INTO products (name, description,size) VALUES (:name, :description, :size)";
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindValue(':name', $data['name'], PDO::PARAM_STR);
+
+        if (isset($data['description'])) {
+            $stmt->bindValue(':description', $data['description'], PDO::PARAM_STR);
+        } else
+            $stmt->bindValue(':description', null, PDO::PARAM_NULL);
+
+        $stmt->bindValue(':size', $data['size'], PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $pdo->lastInsertId();
+    }
 }
