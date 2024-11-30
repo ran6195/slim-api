@@ -6,19 +6,21 @@ use Slim\Factory\AppFactory;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-require (__DIR__) . '/../vendor/autoload.php';
+
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = AppFactory::create();
 
 
-$app->get('/api/products',function(Request $request, Response $response, $args){
+$app->get('/api/products', function (Request $request, Response $response, $args) {
 
-    $body = json_encode([
-        'name' => 'Product 1',
-        'price' => 100
-    ]);
+    $database = new App\Database;
 
-    $response->getBody()->write($body);
+    $repository = new App\Repositories\ProductRepository($database);
+
+    $data = $repository->getAll();
+
+    $response->getBody()->write(json_encode($data));
     return $response->withHeader('Content-Type', 'application/json');
 });
 
