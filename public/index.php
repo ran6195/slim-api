@@ -11,9 +11,9 @@ use Slim\Handlers\Strategies\RequestResponseArgs;
 use App\Controllers\ProductIndex;
 use App\Controllers\Products;
 use App\Controllers\Tables;
-use Selective\BasePath\BasePathDetector;
+use Selective\BasePath\BasePathMiddleware;
 
-$basePath = (new BasePathDetector($_SERVER))->getBasePath();
+
 
 
 
@@ -30,12 +30,13 @@ $container = $buidler->addDefinitions(require APP_ROOT . '/config/definitions.ph
 AppFactory::setContainer($container);
 
 $app = AppFactory::create();
-$app->setBasePath($basePath);
+//$app->setBasePath($basePath);
 
 $collector = $app->getRouteCollector();
 $collector->setDefaultInvocationStrategy(new RequestResponseArgs());
 
 $app->addBodyParsingMiddleware();
+$app->add(new BasePathMiddleware($app));
 
 $error_middleware = $app->addErrorMiddleware(true, true, true);
 
