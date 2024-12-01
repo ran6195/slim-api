@@ -6,7 +6,7 @@ return [
     Database::class => function ($container) {
         return new Database(
             host: 'localhost',
-            dbname: 'slimapi',
+            dbname: 'test',
             user: 'root',
             password: ''
         );

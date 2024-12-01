@@ -11,6 +11,9 @@ use Slim\Handlers\Strategies\RequestResponseArgs;
 use App\Controllers\ProductIndex;
 use App\Controllers\Products;
 use App\Controllers\Tables;
+use Selective\BasePath\BasePathDetector;
+
+$basePath = (new BasePathDetector($_SERVER))->getBasePath();
 
 
 
@@ -27,6 +30,7 @@ $container = $buidler->addDefinitions(require APP_ROOT . '/config/definitions.ph
 AppFactory::setContainer($container);
 
 $app = AppFactory::create();
+$app->setBasePath($basePath);
 
 $collector = $app->getRouteCollector();
 $collector->setDefaultInvocationStrategy(new RequestResponseArgs());
@@ -39,6 +43,11 @@ $error_handler = $error_middleware->getDefaultErrorHandler();
 $error_handler->forceContentType('application/json');
 
 $app->add(new AddJsonResponseHeader);
+
+$app->get('/', function (Request $request, Response $response) {
+    $response->getBody()->write('Hello, World!');
+    return $response;
+});
 
 $app->get('/api/products', ProductIndex::class);
 
