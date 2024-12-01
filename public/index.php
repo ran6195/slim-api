@@ -10,6 +10,7 @@ use DI\ContainerBuilder;
 use Slim\Handlers\Strategies\RequestResponseArgs;
 use App\Controllers\ProductIndex;
 use App\Controllers\Products;
+use App\Controllers\Tables;
 
 
 
@@ -45,5 +46,12 @@ $app->get('/api/products/{id:[0-9]+}', Products::class . ':show')->add(App\Middl
 
 $app->post('/api/products', [Products::class, 'create']);
 
+$app->get('/api/database/tablesFields', [Tables::class, 'showWithFields']);
+
+$app->get('/api/database/tables', [Tables::class, 'show']);
+
+$app->get('/api/tables', [Tables::class, 'show']);
+
+$app->get('/api/tables/{name}', [Tables::class, 'getTable']);
 
 $app->run();
